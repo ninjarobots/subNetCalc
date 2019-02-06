@@ -23,12 +23,16 @@ struct Network {
 };
 
 struct Network *netAddr(char* addr, char* subNet);
-int binMaker(char* string);
+int binMaker(char* string, int flag);
 char* makeString(uint32_t binValue);
 
 int main() {
-	char* addr = "192.168.1.1";
-	char* subNet = "255.255.192.0";
+	char addr[21] = { 0 };
+	printf("Enter an IP address\n");
+	scanf("%20s", addr);
+	char subNet[21] = { 0 };
+	printf("Enter a subnet mask\n");
+	scanf("%20s", subNet);
 	struct Network *networks = netAddr(addr, subNet);
 	printf("The first IP address in this subnet is %s.\n" , networks->first);
 	printf("The second IP address in this subnet is %s.", networks->last);
@@ -40,13 +44,13 @@ int main() {
 
 struct Network *netAddr(char* addr, char* subNet){
 	struct Network *returnStruct = malloc(sizeof(struct Network));
-	uint32_t binAddr = binMaker(addr);
+	uint32_t binAddr = binMaker(addr, 0);
 	int subValue = 1;
 	if (binAddr == 0) {
 		printf("INVALID NETWORK ADDRESS");
 		return -1;
 	}
-	uint32_t binSubNet = binMaker(subNet);
+	uint32_t binSubNet = binMaker(subNet, 1);
 	if (binSubNet == 0) {
 		printf("INVALID SUBNET MASK");
 		return -1;
@@ -62,7 +66,8 @@ struct Network *netAddr(char* addr, char* subNet){
 	return returnStruct;
 }
 
-int binMaker(char* string) {
+int binMaker(char* string, int flag) {
+	int maskValues[8] = { 128, 192, 224, 240, 248, 252, 254, 255 };
 	uint32_t buffer = { 0 };
 	int tmp = 0;
 	double tensCount = 0;
@@ -78,6 +83,16 @@ int binMaker(char* string) {
 			for (int o = (i - count); o < i; o++) {
 				tmp += ((*(string + o) - 48) * tensCount);
 				tensCount /= 10;
+			}
+			if (flag == 1) {
+				int check = 0;
+				for (int x = 0; x < 8; x++) {
+					if (tmp == *(maskValues + x)) {
+						check++;
+					}
+				}if (check == 0) {
+					return 0;
+				}
 			}
 			if (tmp < 0 | tmp > 255) {
 				return 0;
