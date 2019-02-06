@@ -27,8 +27,8 @@ int binMaker(char* string);
 char* makeString(uint32_t binValue);
 
 int main() {
-	char* addr = "122.13.15.18";
-	char* subNet = "255.255.128.0";
+	char* addr = "122.15.11.18";
+	char* subNet = "255.255.192.0";
 	struct Network *networks = netAddr(addr, subNet);
 	getchar();
 }
@@ -93,7 +93,10 @@ int binMaker(char* string) {
 		}
 
 	}
-	return buffer; 
+	if (dotPosition == 4) {
+		return buffer;
+	}
+	return 0;
 }
 char* makeString(uint32_t binValue) {
 	char* returnString = malloc(sizeof(char) * 21);
