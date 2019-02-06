@@ -27,11 +27,14 @@ int binMaker(char* string);
 char* makeString(uint32_t binValue);
 
 int main() {
-	char* addr = "122.15.11.18";
+	char* addr = "192.168.1.1";
 	char* subNet = "255.255.192.0";
 	struct Network *networks = netAddr(addr, subNet);
 	printf("The first IP address in this subnet is %s.\n" , networks->first);
 	printf("The second IP address in this subnet is %s.", networks->last);
+	free(networks->first);
+	free(networks->last);
+	free(networks);
 	getchar();
 }
 
