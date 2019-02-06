@@ -65,7 +65,7 @@ struct Network *netAddr(char* addr, char* subNet){
 	if (binSubNet == 0xFFFFFFFF) {
 		subValue = 0;
 	}
-	uint32_t wildCardAddr = (binSubNet ^ 0xFFFFFFFF);
+	uint32_t wildCardAddr = ~binSubNet;
 	uint32_t binFirst = ((binSubNet & binAddr) + subValue);
 	uint32_t binLast = (binFirst + (wildCardAddr)-(subValue + subValue));
 	returnStruct->first = makeString(binFirst);
