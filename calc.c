@@ -34,12 +34,19 @@ int main() {
 	printf("Enter a subnet mask\n");
 	scanf("%20s", subNet);
 	struct Network *networks = netAddr(addr, subNet);
+	if (networks == NULL) {
+		getchar();
+		getchar();
+		return -1;
+	}
 	printf("The first IP address in this subnet is %s.\n" , networks->first);
 	printf("The second IP address in this subnet is %s.", networks->last);
 	free(networks->first);
 	free(networks->last);
 	free(networks);
 	getchar();
+	getchar();
+	return 0;
 }
 
 struct Network *netAddr(char* addr, char* subNet){
@@ -48,12 +55,12 @@ struct Network *netAddr(char* addr, char* subNet){
 	int subValue = 1;
 	if (binAddr == 0) {
 		printf("INVALID NETWORK ADDRESS");
-		return -1;
+		return 0;
 	}
 	uint32_t binSubNet = binMaker(subNet, 1);
 	if (binSubNet == 0) {
 		printf("INVALID SUBNET MASK");
-		return -1;
+		return 0;
 	}
 	if (binSubNet == 0xFFFFFFFF) {
 		subValue = 0;
@@ -67,7 +74,7 @@ struct Network *netAddr(char* addr, char* subNet){
 }
 
 int binMaker(char* string, int flag) {
-	int maskValues[8] = { 128, 192, 224, 240, 248, 252, 254, 255 };
+	int maskValues[9] = { 255, 252 , 248 , 240 , 224 , 192 , 128 , 0 };
 	uint32_t buffer = { 0 };
 	int tmp = 0;
 	double tensCount = 0;
@@ -86,7 +93,7 @@ int binMaker(char* string, int flag) {
 			}
 			if (flag == 1) {
 				int check = 0;
-				for (int x = 0; x < 8; x++) {
+				for (int x = 0; x < 9; x++) {
 					if (tmp == *(maskValues + x)) {
 						check++;
 					}
